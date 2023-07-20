@@ -3,6 +3,7 @@
 "basis": "sto3g",
 "charge":0,
 "multiplicity":1,
+"abcd":true,
 "scf" : {
 	"type" : "x2c",
 	"interface":"pyscf"

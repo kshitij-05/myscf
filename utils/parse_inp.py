@@ -14,6 +14,7 @@ class parse_input:
 		self.charge = 0
 		self.multiplicity = 1  
 		self.scf_convergence = 1e-10
+		self.use_abcd = False
 		self.content = None
 
 	def if_exist_return(self, key):
@@ -57,6 +58,9 @@ class parse_input:
 
 		if self.has_key("task"):
 			self.task = self.if_exist_return("task")
+
+		if self.has_key("abcd"):
+			self.use_abcd = self.if_exist_return("abcd")
 
 		if self.x2c:
 			if "x2c" in self.scf:

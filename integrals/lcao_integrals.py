@@ -6,6 +6,18 @@ import numpy as np
 #einsum = np.einsum
 einsum = lib.einsum
 
+
+def aotomo(mol,mo_coeffs):
+	ao = mol.intor("int2e_spinor")
+
+	temp = einsum("ip,ijkl->pjkl",mo_coeffs[0].conj(),ao)
+	temp1 = einsum("jq,pjkl->pqkl",mo_coeffs[1],temp)
+	temp = einsum("pqkl,kr->pqrl",temp1,mo_coeffs[2].conj())
+	temp1 = einsum("pqrl,ls->pqrs",temp,mo_coeffs[3])
+
+	return temp1
+
+
 def strip_formula(formula):
 	strp_form = formula
 	strp_form = strp_form.replace("<","") 
@@ -24,6 +36,10 @@ class lcao_integrals:
 		nelec = self.inp.molecule().nelectron
 		self.Ci = mf.mo_coeff[:,:nelec]
 		self.Ca = mf.mo_coeff[:,nelec:]
+
+		print(f"nocc = {nelec}")
+		print(f"nvir = {self.Ca.shape[1]}")
+
 		if inp.scf["type"] != "x2c":
 			self.dtype = np.float64
 		else:
@@ -51,12 +67,17 @@ class lcao_integrals:
 				result = f[:nelec,:]	
 			elif(str_formula[0] in ["a","b","c","d","e","f"]):
 				result = f[nelec:,:]
+			elif(str_formula[0] in ["p","q","r","s","t"]):
+				result = f[:,:]
 
 			if (str_formula[1] in ["i","j","k","l","m","n"]):
 				result = result[:,:nelec]
 			elif(str_formula[1] in ["a","b","c","d","e","f"]):
 				result = result[:,nelec:]
-			
+			elif(str_formula[0] in ["p","q","r","s","t"]):
+				result = f[:,:]
+
+
 			result = result.astype(self.dtype)
 			self.dict[formula] = result
 			return result
@@ -88,9 +109,13 @@ class lcao_integrals:
 			int2 = general(self.inp.molecule(),[c0,c3,c1,c2])
 			int2 = np.reshape(int2,(c0.shape[1],c3.shape[1],c1.shape[1],c2.shape[1]))
 
+			#int1 = aotomo(self.inp.molecule(),[c0,c2,c1,c3])
+			#int2 = aotomo(self.inp.molecule(),[c0,c3,c1,c2])
+
 			# <01||23> = <01|23> - <01|32>
 			result = int1.transpose(0,2,1,3) - int2.transpose(0,2,3,1)
 			self.dict[formula] = result
+			print(f"added {formula} to registry")
 			return result
 
 		else:
@@ -100,11 +125,11 @@ class lcao_integrals:
 		nelec = self.inp.molecule().nelectron
 		mo_e_o = self.mf.mo_energy[:nelec]
 		mo_e_v = self.mf.mo_energy[nelec:]
-		eia = mo_e_o[:, None] - mo_e_v[None, :]
-		eijab = eia[:, None, :, None] + eia[None, :, None, :]
+		eia = mo_e_o[:,None] - mo_e_v
+		eijab = lib.direct_sum('ia,jb->ijab', eia, eia)
 		eia = eia.astype(self.dtype)
 		eijab = eijab.astype(self.dtype)
-		return eia.transpose() ,eijab.transpose(2,3,0,1)
+		return eia ,eijab
 
 
 
