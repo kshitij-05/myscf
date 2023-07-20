@@ -1,6 +1,7 @@
 import numpy as np
 from pyscf import gto
 from pyscf.gto.basis import parse_gaussian
+from pyscf import lib
 import json
 
 def parse_atoms(atoms):
@@ -26,6 +27,7 @@ class parse_input:
 		self.multiplicity = 1  
 		self.scf_convergence = 1e-10
 		self.use_abcd = False
+		self.light_speed = None
 		self.content = None
 
 	def if_exist_return(self, key):
@@ -47,7 +49,7 @@ class parse_input:
 			for s,symbol in enumerate(symbols):
 				c_basis[symbol]	= parse_gaussian.load(self.custom_basis,symbol)
 			mol.basis = c_basis
-			
+
 		else:
 			mol.basis = self.basis
 		mol.charge = self.charge
@@ -86,6 +88,9 @@ class parse_input:
 		if self.has_key("custom_basis"):
 			self.custom_basis = self.if_exist_return("custom_basis")
 
+		if self.has_key("light_speed"):
+			self.light_speed = self.if_exist_return("light_speed")
+			lib.param.LIGHT_SPEED = self.light_speed
 
 		if self.x2c:
 			if "x2c" in self.scf:
