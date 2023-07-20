@@ -1,6 +1,6 @@
 {
 "atoms" : "O   -0.702196054  -0.056060256   0.009942262;H   -1.022193224   0.846775782  -0.011488714;H    0.257521062   0.042121496   0.005218999",
-"basis": "sto3g",
+"custom_basis":"/Users/kshitijsurjuse/code/rmf/myscf/tests/h2o_sto3g.g94",
 "charge":0,
 "multiplicity":1,
 "abcd":true,

@@ -56,10 +56,9 @@ class ccsd:
 			DECC = abs(ECCSD - OLDCC)
 			if DECC < self.conv:
 				print(f"CCSD is converged, {ECCSD}")
-				print("TOTAL ITERATIONS: ", icc)
 				break
 
-			print("E corr: {0:.12f}".format(ECCSD), "a.u.", '\t', "DeltaE: {0:.12f}".format(DECC))
+			print(f"iter: {icc}"," E corr: {0:.12f}".format(ECCSD), "a.u.", '\t', "DeltaE: {0:.12f}".format(DECC))
 			# Appending DIIS vectors to T1 and T2 set
 			T1Set.append(t1.copy())
 			T2Set.append(t2.copy())
