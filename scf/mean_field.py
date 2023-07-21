@@ -64,25 +64,24 @@ class gmf:
 
 		elif self.inp.scf["interface"]=="pyscf":
 
+			max_iter = int(self.inp.scf["max_iter"])
 			if self.inp.scf["type"]=="rhf":
 				mf = scf.RHF(self.inp.molecule())
-				mf.kernel()
-				return mf
-			
+
 			if self.inp.scf["type"]=="uhf":
 				mf = scf.UHF(self.inp.molecule())
-				mf.kernel()
-				return mf
 
 			elif self.inp.scf["type"]=="sfx2c":
 				mf = scf.GHF(self.inp.molecule()).sfx2c1e()
-				mf.kernel()
-				return mf
 
 			elif self.inp.scf["type"]=="x2c":
 				mf = scf.X2C(self.inp.molecule())
-				mf.kernel()
-				return mf
+
+
+			mf.max_cycle = max_iter
+			mf.kernel()
+			return mf
+			
 
 
 
