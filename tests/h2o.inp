@@ -5,8 +5,7 @@
 "multiplicity":1,
 "abcd":true,
 "scf" : {
-	"type" : "x2c",
-	"max_iter":500,
+	"type" : "rhf",
 	"interface":"pyscf"
 	},
 "task":"ccsd"
