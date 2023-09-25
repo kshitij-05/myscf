@@ -1,11 +1,12 @@
 {
-"atoms" : "Ne 0.0 0.0 0.0",
+"atoms" : "Xe 0.0 0.0 0.0",
 "basis": "ccpvdz",
-"charge":1,
-"multiplicity":2,
+"charge":0,
+"multiplicity":1,
+"light_speed":137.03599895723278,
 "scf" : {
 	"type" : "x2c",
 	"interface":"pyscf"
 	},
-"task":"scf"
+"task":"ccsd"
 }
